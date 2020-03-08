@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="panns_inference", # Replace with your own username
-    version="0.0.1",
+    name="panns-inference", # Replace with your own username
+    version="0.0.2",
     author="Qiuqiang Kong",
     author_email="qiuqiangkong@gmail.com",
     description="panns_inference: audio tagging and sound event detection inference toolbox",
@@ -18,5 +18,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    install_requires=['matplotlib', 'torchlibrosa'],
     python_requires='>=3.6',
 )

@@ -4,7 +4,7 @@
 
 ## Installation
 ```
-$ pip install panns_inference
+$ pip install panns-inference
 ```
 
 ## Usage
@@ -18,11 +18,11 @@ audio_path = 'examples/R9_ZSCveAHg_7s.wav'
 audio = audio[None, :]  # (batch_size, segment_samples)
 
 print('------ Audio tagging ------')
-at = AudioTagging(device=device)
+at = AudioTagging(device='cuda')
 (clipwise_output, embedding) = at.inference(audio)
 
 print('------ Sound event detection ------')
-sed = SoundEventDetection(device=device)
+sed = SoundEventDetection(device='cuda')
 framewise_output = sed.inference(audio)
 ```
 
@@ -53,7 +53,7 @@ Save fig to appendixes/sed_result.pdf
 </pre>
 
 Sound event detection plot:
-<img src="results/sed_result.png" width="600">
+<img src="results/sed_results.png" width="600">
 
 ## Cite
 [1] Kong, Qiuqiang, Yin Cao, Turab Iqbal, Yuxuan Wang, Wenwu Wang, and Mark D. Plumbley. "PANNs: Large-Scale Pretrained Audio Neural Networks for Audio Pattern Recognition." arXiv preprint arXiv:1912.10211 (2019).
