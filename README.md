@@ -3,6 +3,7 @@
 **panns_inference** provides an easy to use Python interface for audio tagging and sound event detection. The audio tagging and sound event detection models are trained from PANNs: Large-Scale Pretrained Audio Neural Networks for Audio Pattern Recognition: https://github.com/qiuqiangkong/audioset_tagging_cnn
 
 ## Installation
+PyTorch>=1.0 is required.
 ```
 $ pip install panns-inference
 ```
@@ -53,7 +54,7 @@ Save fig to appendixes/sed_result.pdf
 </pre>
 
 Sound event detection plot:
-<img src="results/sed_results.png" width="600">
+<img src="appendixes/sed_results.png" width="600">
 
 ## Cite
 [1] Kong, Qiuqiang, Yin Cao, Turab Iqbal, Yuxuan Wang, Wenwu Wang, and Mark D. Plumbley. "PANNs: Large-Scale Pretrained Audio Neural Networks for Audio Pattern Recognition." arXiv preprint arXiv:1912.10211 (2019).
