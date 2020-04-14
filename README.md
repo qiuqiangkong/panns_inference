@@ -10,6 +10,12 @@ $ pip install panns-inference
 
 ## Usage
 ```
+$ python3 example.py
+```
+
+For example:
+
+```
 import librosa
 import panns_inference
 from panns_inference import AudioTagging, SoundEventDetection, labels
@@ -27,10 +33,6 @@ sed = SoundEventDetection(device='cuda')
 framewise_output = sed.inference(audio)
 ```
 
-Please run the following command to see detailed example.
-```
-$ python3 example.py
-```
 
 ## Results
 <pre>

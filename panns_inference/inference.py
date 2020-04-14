@@ -77,7 +77,7 @@ class SoundEventDetection(object):
         """Sound event detection inference wrapper.
         """
         if not checkpoint_path:
-            checkpoint_path='{}/panns_data/Cnn14_mAP=0.431.pth'.format(str(Path.home()))
+            checkpoint_path='{}/panns_data/Cnn14_DecisionLevelMax'.format(str(Path.home()))
         print('Checkpoint path: {}'.format(checkpoint_path))
 
         if not os.path.exists(checkpoint_path):
