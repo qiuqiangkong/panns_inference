@@ -24,7 +24,7 @@ def get_filename(path):
 
 
 class AudioTagging(object):
-    def __init__(self, model_type='Cnn14', device='cuda', checkpoint_path=None):
+    def __init__(self, model=None, device='cuda', checkpoint_path=None):
         """Audio tagging inference wrapper.
         """
         if not checkpoint_path:
@@ -44,10 +44,12 @@ class AudioTagging(object):
         self.classes_num = classes_num
 
         # Model
-        Model = eval(model_type)
-        self.model = Model(sample_rate=32000, window_size=1024, 
-            hop_size=320, mel_bins=64, fmin=50, fmax=14000, 
-            classes_num=self.classes_num)
+        if model is None:
+            self.model = Cnn14(sample_rate=32000, window_size=1024, 
+                hop_size=320, mel_bins=64, fmin=50, fmax=14000, 
+                classes_num=self.classes_num)
+        else:
+            self.model = model
 
         checkpoint = torch.load(checkpoint_path, map_location=self.device)
         self.model.load_state_dict(checkpoint['model'])
@@ -73,7 +75,7 @@ class AudioTagging(object):
 
 
 class SoundEventDetection(object):
-    def __init__(self, model_type='Cnn14_DecisionLevelMax', device='cuda', checkpoint_path=None):
+    def __init__(self, model=None, device='cuda', checkpoint_path=None):
         """Sound event detection inference wrapper.
         """
         if not checkpoint_path:
@@ -93,10 +95,12 @@ class SoundEventDetection(object):
         self.classes_num = classes_num
 
         # Model
-        Model = eval(model_type)
-        self.model = Model(sample_rate=32000, window_size=1024, 
-            hop_size=320, mel_bins=64, fmin=50, fmax=14000, 
-            classes_num=self.classes_num)
+        if model is None:
+            self.model = Cnn14_DecisionLevelMax(sample_rate=32000, window_size=1024, 
+                hop_size=320, mel_bins=64, fmin=50, fmax=14000, 
+                classes_num=self.classes_num)
+        else:
+            self.model = model
         
         checkpoint = torch.load(checkpoint_path, map_location=self.device)
         self.model.load_state_dict(checkpoint['model'])
