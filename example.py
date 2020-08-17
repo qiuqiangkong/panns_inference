@@ -52,19 +52,19 @@ if __name__ == '__main__':
     """Example of using panns_inferece for audio tagging and sound evetn detection.
     """
     device = 'cuda'
-    audio_path = 'examples/R9_ZSCveAHg_7s.wav'
+    audio_path = 'resources/R9_ZSCveAHg_7s.wav'
     (audio, _) = librosa.core.load(audio_path, sr=32000, mono=True)
     audio = audio[None, :]  # (batch_size, segment_samples)
 
     print('------ Audio tagging ------')
-    at = AudioTagging(device=device)
+    at = AudioTagging(checkpoint_path=None, device=device)
     (clipwise_output, embedding) = at.inference(audio)
     """clipwise_output: (batch_size, classes_num), embedding: (batch_size, embedding_size)"""
 
     print_audio_tagging_result(clipwise_output[0])
 
     print('------ Sound event detection ------')
-    sed = SoundEventDetection(device=device)
+    sed = SoundEventDetection(checkpoint_path=None, device=device)
     framewise_output = sed.inference(audio)
     """(batch_size, time_steps, classes_num)"""
 

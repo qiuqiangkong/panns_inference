@@ -25,11 +25,11 @@ audio_path = 'examples/R9_ZSCveAHg_7s.wav'
 audio = audio[None, :]  # (batch_size, segment_samples)
 
 print('------ Audio tagging ------')
-at = AudioTagging(device='cuda')
+at = AudioTagging(checkpoint_path=None, device='cuda')
 (clipwise_output, embedding) = at.inference(audio)
 
 print('------ Sound event detection ------')
-sed = SoundEventDetection(device='cuda')
+sed = SoundEventDetection(checkpoint_path=None, device='cuda')
 framewise_output = sed.inference(audio)
 ```
 
