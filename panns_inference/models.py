@@ -218,7 +218,7 @@ class Cnn14_DecisionLevelMax(nn.Module):
         init_layer(self.fc1)
         init_layer(self.fc_audioset)
  
-    def forward(self, input, mixup_lambda=None):
+    def forward(self, input, mixup_lambda=None, interpolate_mode='nearest'):
         """
         Input: (batch_size, data_length)"""
 
@@ -263,7 +263,7 @@ class Cnn14_DecisionLevelMax(nn.Module):
         (clipwise_output, _) = torch.max(segmentwise_output, dim=1)
 
         # Get framewise output
-        framewise_output = interpolate(segmentwise_output, self.interpolate_ratio)
+        framewise_output = interpolate(segmentwise_output, self.interpolate_ratio, interpolate_mode)
         framewise_output = pad_framewise_output(framewise_output, frames_num)
 
         output_dict = {'framewise_output': framewise_output, 
