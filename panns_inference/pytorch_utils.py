@@ -2,6 +2,7 @@
 https://github.com/qiuqiangkong/audioset_tagging_cnn/blob/master/pytorch/pytorch_utils.py
 """
 import torch
+import torch.nn.functional as F
 
 
 def move_data_to_device(x, device):
@@ -15,7 +16,7 @@ def move_data_to_device(x, device):
     return x.to(device)
 
 
-def interpolate(x, ratio):
+def interpolate(x, ratio, interpolate_mode='nearest'):
     """Interpolate the prediction to compensate the downsampling operation in a
     CNN.
     
@@ -24,8 +25,22 @@ def interpolate(x, ratio):
       ratio: int, ratio to upsample
     """
     (batch_size, time_steps, classes_num) = x.shape
-    upsampled = x[:, :, None, :].repeat(1, 1, ratio, 1)
-    upsampled = upsampled.reshape(batch_size, time_steps * ratio, classes_num)
+
+    if interpolate_mode == "nearest":
+        upsampled = x[:, :, None, :].repeat(1, 1, ratio, 1)
+        upsampled = upsampled.reshape(batch_size, time_steps * ratio, classes_num)
+    
+    elif interpolate_mode == "linear":
+        upsampled = F.interpolate(
+            input=x.transpose(1, 2), 
+            scale_factor=ratio, 
+            mode='linear', 
+            align_corners=True
+        ).transpose(1, 2)
+
+    else:
+        raise NotImplementedError
+
     return upsampled
 
 
