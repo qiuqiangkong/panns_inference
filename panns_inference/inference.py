@@ -115,12 +115,12 @@ class SoundEventDetection(object):
         else:
             print('Using CPU.')
 
-    def inference(self, audio):
+    def inference(self, audio, interpolate_mode='nearest'):
         audio = move_data_to_device(audio, self.device)
 
         with torch.no_grad():
             self.model.eval()
-            output_dict = self.model(audio, None)
+            output_dict = self.model(audio, None, interpolate_mode)
 
         framewise_output = output_dict['framewise_output'].data.cpu().numpy()
 
