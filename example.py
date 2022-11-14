@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     print('------ Sound event detection ------')
     sed = SoundEventDetection(checkpoint_path=None, device=device)
-    framewise_output = sed.inference(audio)
+    framewise_output = sed.inference(audio, interpolate_mode='nearest')
     """(batch_size, time_steps, classes_num)"""
 
     plot_sound_event_detection_result(framewise_output[0])
