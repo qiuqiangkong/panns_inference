@@ -77,8 +77,14 @@ class AudioTagging(object):
 
 
 class SoundEventDetection(object):
-    def __init__(self, model=None, checkpoint_path=None, device='cuda'):
+    def __init__(self, model=None, checkpoint_path=None, device='cuda', interpolate_mode='nearest'):
         """Sound event detection inference wrapper.
+
+        Args:
+            model: None | nn.Module
+            checkpoint_path: str
+            device: str, 'cpu' | 'cuda'
+            interpolate_mode, 'nearest' |'linear'
         """
         if not checkpoint_path:
             checkpoint_path='{}/panns_data/Cnn14_DecisionLevelMax.pth'.format(str(Path.home()))
@@ -100,7 +106,7 @@ class SoundEventDetection(object):
         if model is None:
             self.model = Cnn14_DecisionLevelMax(sample_rate=32000, window_size=1024, 
                 hop_size=320, mel_bins=64, fmin=50, fmax=14000, 
-                classes_num=self.classes_num)
+                classes_num=self.classes_num, interpolate_mode=interpolate_mode)
         else:
             self.model = model
         
@@ -115,12 +121,15 @@ class SoundEventDetection(object):
         else:
             print('Using CPU.')
 
-    def inference(self, audio, interpolate_mode='nearest'):
+    def inference(self, audio):
         audio = move_data_to_device(audio, self.device)
 
         with torch.no_grad():
             self.model.eval()
-            output_dict = self.model(audio, None, interpolate_mode)
+            output_dict = self.model(
+                input=audio, 
+                mixup_lambda=None
+            )
 
         framewise_output = output_dict['framewise_output'].data.cpu().numpy()
 

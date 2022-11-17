@@ -64,8 +64,12 @@ if __name__ == '__main__':
     print_audio_tagging_result(clipwise_output[0])
 
     print('------ Sound event detection ------')
-    sed = SoundEventDetection(checkpoint_path=None, device=device)
-    framewise_output = sed.inference(audio, interpolate_mode='nearest')
+    sed = SoundEventDetection(
+        checkpoint_path=None, 
+        device=device, 
+        interpolate_mode='nearest', # 'nearest' |'linear'
+    )
+    framewise_output = sed.inference(audio)
     """(batch_size, time_steps, classes_num)"""
 
     plot_sound_event_detection_result(framewise_output[0])

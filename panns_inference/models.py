@@ -16,7 +16,7 @@ from torch.nn.parameter import Parameter
 
 from torchlibrosa.stft import Spectrogram, LogmelFilterBank
 from torchlibrosa.augmentation import SpecAugmentation
-from .pytorch_utils import do_mixup, interpolate, pad_framewise_output
+from .pytorch_utils import do_mixup, pad_framewise_output, Interpolator
  
 
 def init_layer(layer):
@@ -173,7 +173,7 @@ class Cnn14(nn.Module):
 
 class Cnn14_DecisionLevelMax(nn.Module):
     def __init__(self, sample_rate, window_size, hop_size, mel_bins, fmin, 
-        fmax, classes_num):
+        fmax, classes_num, interpolate_mode='nearest'):
         
         super(Cnn14_DecisionLevelMax, self).__init__()
 
@@ -210,6 +210,11 @@ class Cnn14_DecisionLevelMax(nn.Module):
 
         self.fc1 = nn.Linear(2048, 2048, bias=True)
         self.fc_audioset = nn.Linear(2048, classes_num, bias=True)
+
+        self.interpolator = Interpolator(
+            ratio=self.interpolate_ratio, 
+            interpolate_mode=interpolate_mode
+        )
         
         self.init_weight()
 
@@ -218,7 +223,7 @@ class Cnn14_DecisionLevelMax(nn.Module):
         init_layer(self.fc1)
         init_layer(self.fc_audioset)
  
-    def forward(self, input, mixup_lambda=None, interpolate_mode='nearest'):
+    def forward(self, input, mixup_lambda=None):
         """
         Input: (batch_size, data_length)"""
 
@@ -263,7 +268,7 @@ class Cnn14_DecisionLevelMax(nn.Module):
         (clipwise_output, _) = torch.max(segmentwise_output, dim=1)
 
         # Get framewise output
-        framewise_output = interpolate(segmentwise_output, self.interpolate_ratio, interpolate_mode)
+        framewise_output = self.interpolator(segmentwise_output)
         framewise_output = pad_framewise_output(framewise_output, frames_num)
 
         output_dict = {'framewise_output': framewise_output, 
