@@ -33,7 +33,7 @@ class Interpolator(nn.Module):
 
         elif interpolate_mode == 'linear':
             self.interpolator = LinearInterpolator(ratio)
-
+        
     def forward(self, x):
         """Interpolate the sound event detection result along the time axis.
         
@@ -83,16 +83,18 @@ class LinearInterpolator(nn.Module):
 
         self.ratio = ratio
     
-        self.weight = torch.zeros(ratio * 2 + 1)
+        weight = torch.zeros(ratio * 2 + 1)
 
         for i in range(ratio):
-            self.weight[i] = i / ratio
+            weight[i] = i / ratio
 
         for i in range(ratio, ratio * 2 + 1):
-            self.weight[i] = 1. - (i - ratio) / ratio
+            weight[i] = 1. - (i - ratio) / ratio
 
-        self.weight = self.weight[None, None, :]
+        weight = weight[None, None, :]
 
+        self.register_buffer('weight', weight, persistent=False)
+        
     def forward(self, x):
         """Interpolate the sound event detection result along the time axis.
         
