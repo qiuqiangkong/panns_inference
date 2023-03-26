@@ -31,9 +31,6 @@ class Interpolator(nn.Module):
         if interpolate_mode == 'nearest':
             self.interpolator = NearestInterpolator(ratio)
 
-        elif interpolate_mode == 'linear':
-            self.interpolator = LinearInterpolator(ratio)
-        
     def forward(self, x):
         """Interpolate the sound event detection result along the time axis.
         
@@ -69,55 +66,6 @@ class NearestInterpolator(nn.Module):
         (batch_size, time_steps, classes_num) = x.shape
         upsampled = x[:, :, None, :].repeat(1, 1, self.ratio, 1)
         upsampled = upsampled.reshape(batch_size, time_steps * self.ratio, classes_num)
-        return upsampled
-
-
-class LinearInterpolator(nn.Module):
-    def __init__(self, ratio):
-        """Linearly interpolate the sound event detection result along the time axis.
-
-        Args:
-            ratio: int
-        """
-        super(LinearInterpolator, self).__init__()
-
-        self.ratio = ratio
-    
-        weight = torch.zeros(ratio * 2 + 1)
-
-        for i in range(ratio):
-            weight[i] = i / ratio
-
-        for i in range(ratio, ratio * 2 + 1):
-            weight[i] = 1. - (i - ratio) / ratio
-
-        weight = weight[None, None, :]
-
-        self.register_buffer('weight', weight, persistent=False)
-        
-    def forward(self, x):
-        """Interpolate the sound event detection result along the time axis.
-        
-        Args:
-            x: (batch_size, time_steps, classes_num)
-
-        Returns:
-            upsampled: (batch_size, new_time_steps, classes_num)
-        """
-        batch_size, time_steps, classes_num = x.shape
-        x = x.transpose(1, 2).reshape(batch_size * classes_num, 1, time_steps)
-
-        upsampled = F.conv_transpose1d(
-            input=x, 
-            weight=self.weight, 
-            bias=None, 
-            stride=self.ratio, 
-            padding=self.ratio, 
-            output_padding=0
-        )
-        new_time_steps = upsampled.shape[-1]
-        upsampled = upsampled.reshape(batch_size, classes_num, new_time_steps)
-        upsampled = upsampled.transpose(1, 2)
         return upsampled
 
 

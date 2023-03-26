@@ -67,7 +67,7 @@ if __name__ == '__main__':
     sed = SoundEventDetection(
         checkpoint_path=None, 
         device=device, 
-        interpolate_mode='nearest', # 'nearest' |'linear'
+        interpolate_mode='nearest', # 'nearest'
     )
     framewise_output = sed.inference(audio)
     """(batch_size, time_steps, classes_num)"""

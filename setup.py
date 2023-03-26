@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="panns-inference", # Replace with your own username
-    version="0.1.0",
+    version="0.1.1",
     author="Qiuqiang Kong",
     author_email="qiuqiangkong@gmail.com",
     description="panns_inference: audio tagging and sound event detection inference toolbox",
