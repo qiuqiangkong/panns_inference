@@ -1,4 +1,5 @@
 import os
+import urllib.request
 import numpy as np
 import csv
 from pathlib import Path
@@ -9,8 +10,10 @@ labels_csv_path = '{}/panns_data/class_labels_indices.csv'.format(str(Path.home(
 
 # Download labels if not exist
 if not os.path.isfile(labels_csv_path):
-	os.makedirs(os.path.dirname(labels_csv_path), exist_ok=True)
-	os.system('wget -O "{}" "http://storage.googleapis.com/us_audioset/youtube_corpus/v1/csv/class_labels_indices.csv"'.format(labels_csv_path))
+    os.makedirs(os.path.dirname(labels_csv_path), exist_ok=True)
+    with urllib.request.urlopen('http://storage.googleapis.com/us_audioset/youtube_corpus/v1/csv/class_labels_indices.csv') as ifh:
+        with open(labels_csv_path, 'wb') as ofh:
+            ofh.write(ifh.read())
 
 # Load label
 with open(labels_csv_path, 'r') as f:
